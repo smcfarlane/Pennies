@@ -1,0 +1,55 @@
+{
+  "players": [
+    {
+      "name": "john",
+      "score": 0,
+      "hand": [],
+      "position": 0,
+      "pennies": 10
+    },
+    {
+      "name": "sally",
+      "score": 0,
+      "hand": [],
+      "position": 1,
+      "pennies": 10
+    },
+    {
+      "name": "lisa",
+      "score": 0,
+      "hand": [],
+      "position": 2,
+      "pennies": 10
+    },
+    {
+      "name": "steve",
+      "score": 0,
+      "hand": [],
+      "position": 3,
+      "pennies": 10
+    }
+  ],
+  "play": {
+    "player": "john",
+    "position": 0,
+    "down": false,
+    "cards_played": {
+      "sets": [],
+      "other": []
+    },
+    "discard": "",
+    "hand_state": []
+  },
+  "game":{
+    "current_player": 0,
+    "deck":[],
+    "discard_pile": [],
+    "winner": false,
+    "round": 1,
+    "round_rules": "",
+    "table": {
+      "ace": ["1d", "1s", "1d"],
+      "five": ["5d", "5c", "5h", "5d"]
+    }
+  }
+}
