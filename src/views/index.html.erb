@@ -1,0 +1,72 @@
+<!Doctype html>
+<html>
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <h1>Play a card game</h1>
+    </div>
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h2>Rooms</h2>
+              </div>
+              <div class="panel-body rooms">
+
+              </div>
+              <div class="panel-footer">
+                <button class="btn btn-default create-room">Create Room</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3>Players</h3>
+              </div>
+              <div class="panel-body">
+                <ul class="list-group players-list">
+
+                </ul>
+              </div>
+            </div>
+
+            <form id="player-name" class="col-md-12 form-inline row">
+              <h3><label for="player-name">Create Your UserName</label></h3>
+              <div class="input-group">
+                <input class="player-name form-control" type="text">
+                <span class="input-group-btn">
+                  <input class="btn btn-default" type="submit">
+                </span>
+              </div>
+
+            </form>
+            <div class="col-md-12" style="margin-top: 20px">
+              <button type="button" class="btn btn-warning go-offline">Go Offline</button>
+              <button type="button" class="btn btn-danger delete-players">Delete Players</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+
+</html>

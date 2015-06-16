@@ -24,3 +24,5 @@ Style/EmptyLinesAroundClassBody:
 
 Style/EmptyLinesAroundMethodBody:
   Enabled: false
+
+Style/
