@@ -16,7 +16,7 @@ ws.onopen = function(){
   if (player.id === '') {
     if (window.localStorage.getItem('user_id')) {
       player.id = window.localStorage.getItem('user_id');
-      ws.send(JSON.stringify({handler: 'get_player_info', id: player.id}));
+      ws.send(JSON.stringify({handler: 'get_player', id: player.id}));
       console.log(player);
     } else {
       ws.send(JSON.stringify({handler: 'get_uuid'}));
@@ -45,7 +45,7 @@ ws.onmessage = function(message) {
     window.localStorage.setItem('user_id', data.uuid);
     player.id = data.uuid;
   }
-  else if (data.handler === 'get_player_info'){
+  else if (data.handler === 'get_player'){
     player = data.player;
   }
   else if (data.handler === 'reset_rooms'){
