@@ -76,6 +76,7 @@ module Application
     def remove_player_from_room room_id, player_id
       if @rooms[room_id] && @players[player_id]
         @rooms[room_id].players.delete player_id
+        get_all_rooms
       end
     end
 
