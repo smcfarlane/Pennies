@@ -9,7 +9,7 @@ module Application
       end
 
       def handle(message)
-        [:get_uuid, @uuid_gen.generate]
+        @dispatcher.send_to_current_client JSON.dump({handler: 'get_uuid', uuid: @uuid_gen.generate})
       end
 
       def handler_name

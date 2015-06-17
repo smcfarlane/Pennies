@@ -49,11 +49,13 @@ module Application
 
     def set_room id, name
       @room[id] = Room.new id, name
+      @room[id]
     end
 
     def add_player_to_room room_id, player_id
       if @rooms[room_id] && @players[player_id]
         @rooms[room_id].players[player_id] = @players[player_id]
+        @rooms[room_id]
       end
     end
 

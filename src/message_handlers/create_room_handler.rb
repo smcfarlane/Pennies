@@ -1,16 +1,21 @@
 require_relative 'message_handler'
+require 'json'
 
 module Application
   module Handlers
     class CreateRoom < MessageHandler
       def handle(message)
         @uuid_gen = UUID.new
-        @dispatcher.access_parlor :create_room, @uuid_gen.generate, message['room_name']
-        message['player']
+        @dispatcher.access_parlor :set_room, :created_room, @uuid_gen.generate, message['room_name']
+        @dispatcher.access_parlor :add_player_to_room, :added_player_to_room, @room_id,  message['player']['id']
       end
 
-      def return result
+      def created_room room
+        @room_id = room.id
+      end
 
+      def added_player_to_room room
+        @dispatcher.send_to_all_clients JSON.dump({handler: 'create_room', room: room.to_h})
       end
 
       def handler_name

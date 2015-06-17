@@ -42,8 +42,8 @@ ws.onmessage = function(message) {
     data.rooms.forEach(function(room){ $('.rooms').append(createRoomHTML(room.id, room.name, room.players)); });
   }
   else if (data.handler === 'get_uuid') {
-    window.localStorage.setItem('user_id', data.id);
-    player.id = data.id;
+    window.localStorage.setItem('user_id', data.uuid);
+    player.id = data.uuid;
   }
   else if (data.handler === 'get_player_info'){
     player = data.player;

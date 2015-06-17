@@ -23,8 +23,12 @@ module Application
       @handlers[handler].send handler_method, result
     end
 
+    def send_to_current_client message
+      @current_ws.send(message)
+    end
+
     def send_to_all_clients message
-      @app.clients.each {|client| client.send(json)}
+      @app.clients.each {|client| client.send(message)}
     end
   end
 
