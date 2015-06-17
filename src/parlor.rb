@@ -36,8 +36,12 @@ module Application
       @players = {}
     end
 
-    def players_array
+    def get_all_players
       @players.map {|player| player.to_h}
+    end
+
+    def get_all_rooms
+      @rooms.map {|room| room.to_h}
     end
 
     def set_player player, ws
@@ -53,7 +57,7 @@ module Application
       if @player['player_id']
         player = @player['player_id']
         @player.delete player_id
-        [player, players_array]
+        [player, get_all_players]
       end
     end
 
