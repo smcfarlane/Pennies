@@ -46,7 +46,15 @@ module Application
           ws.on :close do |event|
             p [:close, ws.object_id, event.code, event.reason]
             @app.clients.delete(ws)
+            @app.client_players.each do |k, v|
+              if v == ws
+                @app.delete_player @app.players[k]
+                @app.players.delete k
+                @app.client_players.delete k
+              end
+            end
             ws = nil
+            p @app.players
           end
           # Return async Rack response
           ws.rack_response

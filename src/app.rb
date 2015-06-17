@@ -20,13 +20,14 @@ module Application
   end
 
   class App
-    attr_reader :rooms, :clients, :players
+    attr_reader :rooms, :clients, :players, :client_players
     attr_accessor :ws
     def initialize
       @ws = ''
       @rooms = []
       @clients = []
       @players = {}
+      @client_players = {}
     end
 
     def get_uuid uuid
@@ -48,6 +49,7 @@ module Application
     end
 
     def add_player player
+      @client_players[player["id"]] = @ws
       @players[player["id"]] = player
       json = JSON.dump({handler: 'add_player', player: player["name"]})
       @clients.each {|client| client.send(json)}
@@ -67,9 +69,13 @@ module Application
     end
 
     def delete_player player
-      @players.delete(player['id'])
-      json = JSON.dump({handler: 'delete_player', player: player, players: @players})
-      @clients.each {|client| client.send(json)}
+      if player
+        if player["id"]
+          @players.delete(player['id'])
+          json = JSON.dump({handler: 'delete_player', player: player, players: @players})
+          @clients.each {|client| client.send(json)}
+        end
+      end
     end
   end
 

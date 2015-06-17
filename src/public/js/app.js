@@ -25,10 +25,6 @@ ws.onopen = function(){
   }
 };
 
-ws.onclose = function(){
-  ws.send(JSON.stringify({handler: 'delete_player', player: player}));
-};
-
 var validatePlayer = function() {
   if (player.name === '') {
     alert('Create username before creating a room.');
@@ -72,7 +68,7 @@ ws.onmessage = function(message) {
       ws.send(JSON.stringify({handler: 'get_uuid'}));
     }
     $(".players-list").empty();
-    $.each(data.players, function(key, item){ $(".players-list").append('<li class="list-group-item">' + item.name + "</li>");});
+    $.each(data.players, function(key, player){ $(".players-list").append('<li class="list-group-item">' + player.name + "</li>");});
   }
 };
 
@@ -86,20 +82,22 @@ var createRoomHTML = function(id, name, players){
   return '<div class="col-md-6"><div class="panel panel-default">' + roomHeading + list_items.join(' ') + roomFooter + '</div></div>';
 };
 
-console.log(player);
 // add_player
 $("#player-name").on("submit", function(event) {
   event.preventDefault();
-  var playerName = $("input.player-name")[0].value;
-  console.log(player);
-  player.name = playerName;
-  var data = { handler: 'add_player', name: playerName, player: player };
-  $("#player-name").empty();
-  ws.send(JSON.stringify(data));
+  if (player.name === '') {
+    var playerName = $("input.player-name")[0].value;
+    player.name = playerName;
+    var data = { handler: 'add_player', name: playerName, player: player };
+    ws.send(JSON.stringify(data));
+    $("input.player-name")[0].value = '';
+  }
+  $('.create-username').addClass('disabled');
 });
 
 // delete_players
-$('.go-offine').click(function(e){
+$('.go-offline').click(function(e){
+  $('.create-username').removeClass('disabled');
   ws.send(JSON.stringify({handler: 'delete_player', player: player}));
 });
 
