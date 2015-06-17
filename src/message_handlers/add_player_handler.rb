@@ -4,11 +4,11 @@ module Application
   module Handlers
     class AddPlayer < MessageHandler
       def handle(message)
-        @dispatcher.access_parlor 'add_player', :set_player, player, @current_ws
+        @dispatcher.access_parlor 'add_player', :set_player, :add_player, player, @current_ws
       end
 
-      def return result
-        @dispatcher.send_to_all_clients(JSON.dump({handler: 'add_player', player: result['name']}))
+      def add_player player
+        @dispatcher.send_to_all_clients(JSON.dump({handler: 'add_player', player: player['name']}))
       end
 
       def handler_name

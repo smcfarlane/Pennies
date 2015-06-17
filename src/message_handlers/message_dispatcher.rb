@@ -18,9 +18,9 @@ module Application
       @app.send action[0], action[1]
     end
 
-    def access_parlor handler, method, *args
+    def access_parlor handler, method, handler_method, *args
       result = @parlor.send(method, *args)
-      @handlers[handler].return result
+      @handlers[handler].send handler_method, result
     end
 
     def send_to_all_clients message
