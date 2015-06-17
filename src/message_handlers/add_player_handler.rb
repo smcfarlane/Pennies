@@ -4,7 +4,12 @@ module Application
   module Handlers
     class AddPlayer < MessageHandler
       def handle(message)
-        [:add_player, message['player']]
+        @dispatcher.access_parlor 'add_player', :set_player, player, @current_ws
+      end
+
+      def return result
+        json = JSON.dump({handler: 'add_player', player: result['name']})
+        @clients.each {|client| client.send(json)}
       end
 
       def handler_name

@@ -2,9 +2,11 @@ require_relative '../server'
 require 'byebug'
 module Application
   class MessageDispatcherKlass
-    def initialize(app)
+    def initialize(app, parlor)
       @handlers = {}
       @app = app
+      @parlor = parlor
+      @current_ws = @app.ws
     end
 
     def register(handler)
@@ -14,6 +16,11 @@ module Application
     def handle_message(message)
       action = @handlers[message['handler']].handle message
       @app.send action[0], action[1]
+    end
+
+    def access_parlor handler, method, *args
+      result = @parlor.send(method, *args)
+      @handlers[handler].return result
     end
   end
 
