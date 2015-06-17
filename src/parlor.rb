@@ -24,12 +24,20 @@ module Application
       @player = player
       @ws = ws
     end
+
+    def to_h
+      @player
+    end
   end
 
   class Parlor
     def initialize
       @rooms = {}
       @players = {}
+    end
+
+    def players_array
+      @players.map {|player| player.to_h}
     end
 
     def set_player player, ws
@@ -43,7 +51,9 @@ module Application
 
     def remove_player player_id
       if @player['player_id']
+        player = @player['player_id']
         @player.delete player_id
+        [player, players_array]
       end
     end
 
