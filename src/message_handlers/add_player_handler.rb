@@ -8,8 +8,7 @@ module Application
       end
 
       def return result
-        json = JSON.dump({handler: 'add_player', player: result['name']})
-        @clients.each {|client| client.send(json)}
+        @dispatcher.send_to_all_clients(JSON.dump({handler: 'add_player', player: result['name']}))
       end
 
       def handler_name

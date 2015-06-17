@@ -22,6 +22,10 @@ module Application
       result = @parlor.send(method, *args)
       @handlers[handler].return result
     end
+
+    def send_to_all_clients message
+      @app.clients.each {|client| client.send(json)}
+    end
   end
 
   Dispatcher = MessageDispatcherKlass.new Application::APP
