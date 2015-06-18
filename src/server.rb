@@ -2,6 +2,7 @@ require 'faye/websocket'
 require 'sinatra'
 require 'json'
 require_relative 'app'
+require_relative 'parlor'
 require 'require_all'
 require_all 'message_handlers'
 

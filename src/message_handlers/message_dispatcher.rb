@@ -1,5 +1,6 @@
 require_relative '../server'
-require 'byebug'
+
+
 module Application
   class MessageDispatcherKlass
     def initialize(app, parlor)
@@ -11,6 +12,7 @@ module Application
 
     def register(handler)
       @handlers[handler.handler_name] = handler
+      @handlers[handler.handler_name].register_dispatcher self
     end
 
     def handle_message(message)
@@ -32,5 +34,5 @@ module Application
     end
   end
 
-  Dispatcher = MessageDispatcherKlass.new Application::APP
+  Dispatcher = MessageDispatcherKlass.new Application::APP, Application::PARLOR
 end

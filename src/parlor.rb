@@ -18,7 +18,7 @@ module Application
     end
   end
 
-  class player
+  class Player
     attr_accessor :player, :ws
     def initialize player, ws
       @player = player
@@ -86,4 +86,6 @@ module Application
       end
     end
   end
+
+  PARLOR = Parlor.new
 end
