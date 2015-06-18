@@ -1,4 +1,5 @@
 require_relative 'message_handler'
+require 'json'
 
 module Application
   module Handlers

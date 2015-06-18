@@ -1,13 +1,13 @@
 
 module Application
   class Room
-    attr_accessor :players, :name, :game, :id, :status
+    attr_accessor :players, :name, :game, :id, :status, :players_ready
     def initialize id, name
       @players = {}
       @game = {}
       @name = name
       @id = id
-      @status = "waiting"
+      @status = "awaiting players"
       @players_ready = []
     end
 
@@ -17,7 +17,7 @@ module Application
         name: @name,
         players: @players.values.map {|player| player.to_h},
         status: @status,
-        players_ready: []
+        players_ready: @players_ready
       }
     end
   end
@@ -42,11 +42,15 @@ module Application
     end
 
     def get_all_players
-      @players.map {|key, player| player.to_h}
+      a = []
+      @players.each {|key, player| a << player.to_h}
+      a
     end
 
     def get_all_rooms
-      @rooms.map {|key, room| room.to_h}
+      a = []
+      @rooms.each {|key, room| a << room.to_h}
+      a
     end
 
     def set_player player, ws
@@ -80,6 +84,14 @@ module Application
         @rooms[room_id].players[player_id] = @players[player_id]
         @player_room[player_id] = room_id
         @rooms[room_id]
+      end
+    end
+
+    def player_ready room_id, player_id
+      if @rooms[room_id] && @players[player_id]
+        @rooms[room_id].players_ready << player_id
+        byebug
+        get_all_rooms
       end
     end
 

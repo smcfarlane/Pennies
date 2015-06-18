@@ -39,7 +39,7 @@ ws.onmessage = function(message) {
   console.log(data);
   if (data.handler === 'initial_data') {
     $.each(data.players, function(key, item){ $(".players-list").append('<li class="list-group-item">' + item.name + "</li>");});
-    data.rooms.forEach(function(room){ $('.rooms').append(createRoomHTML(room.id, room.name, room.players)); });
+    data.rooms.forEach(function(room){ $('.rooms').append(createRoomHTML(room)); });
   }
   else if (data.handler === 'get_uuid') {
     window.localStorage.setItem('user_id', data.uuid);
@@ -50,10 +50,10 @@ ws.onmessage = function(message) {
   }
   else if (data.handler === 'reset_rooms'){
     $('.rooms').empty();
-    data.rooms.forEach(function(room){ $('.rooms').append(createRoomHTML(room.id, room.name, room.players)); });
+    data.rooms.forEach(function(room){ $('.rooms').append(createRoomHTML(room)); });
   }
   else if (data.handler === 'create_room'){
-    $('.rooms').append(createRoomHTML(data.room.id, data.room.name, data.room.players));
+    $('.rooms').append(createRoomHTML(data.room));
     player.room = data.room;
   }
   else if (data.handler === 'delete-players') {
@@ -72,14 +72,19 @@ ws.onmessage = function(message) {
   }
 };
 
-var createRoomHTML = function(id, name, players){
-  console.log(players);
-  var roomHeading = '<div class="panel-heading"><h3> ID: ' + id + ' Name: ' + name + '</h3></div><h3>&emsp;Players In Room</h3><ul class="list-group">';
+var createRoomHTML = function(room){
+  var roomHeading = '<div class="panel-heading"><h3> ID: ' + room.status + ' Name: ' + room.name + '</h3></div><h3>&emsp;Players In Room</h3><ul class="list-group">';
   var list_items = []
-  players.forEach(function(player){
-    list_items.push( '<li class="list-group-item">' + player.name + '</li>');
+  room.players.forEach(function(player){
+    var ready = '';
+    var readyBtn = '<button id="'+ room.id +'" class="btn btn-default btn-xs pull-right ready-btn" type="button">Ready?</button>';
+    if (room.players_ready.indexOf(player.id) !== -1) {
+      ready = '<span class="glyphicon glyphicon-star" aria-hidden="true"></span>';
+      readyBtn = '';
+    }
+    list_items.push('<li class="list-group-item">'+ ready + player.name + readyBtn + '</li>');
   });
-  var roomFooter = '</ul><div class="panel-footer"><div class="btn-group"><button id="'+ id +'" class="btn btn-info" type="button">Join</button><button id="'+ id +'" class="btn btn-danger" type="button">Leave</button><button type="button" class="btn btn-success">Start Game</button></div></div>';
+  var roomFooter = '</ul><div class="panel-footer"><div class="btn-group"><button id="'+ room.id +'" class="btn btn-info" type="button">Join</button><button id="'+ room.id +'" class="btn btn-danger" type="button">Leave</button><button id="'+ room.id +'" type="button" class="btn btn-success">Start Game</button></div></div>';
   return '<div class="col-md-6"><div class="panel panel-default">' + roomHeading + list_items.join(' ') + roomFooter + '</div></div>';
 };
 
@@ -123,10 +128,11 @@ $(".start-game").click(function(e){
 
 // join room
 $(".rooms").click(function(e){
-  if ($(e.target).attr('class') === "btn btn-success"){
+  if ($(e.target).attr('class') === "btn btn-info"){
     ws.send(JSON.stringify({handler: 'join_room', room_id: $(e.target).attr('id'), player: player}));
   } else if ($(e.target).attr('class') === "btn btn-danger") {
     ws.send(JSON.stringify({handler: 'leave_room', room_id: $(e.target).attr('id'), player: player}));
+  } else if ($(e.target).hasClass('ready-btn')) {
+    ws.send(JSON.stringify({handler: 'player_ready', room_id: $(e.target).attr('id'), player: player}));
   }
-
 });
