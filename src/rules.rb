@@ -1,30 +1,38 @@
+module Application
+  module Game
+    module Rules
+      ROUNDS = [
+        {sets: 1, of: 3},
+        {sets: 2, of: 3},
+        {sets: 1, of: 4},
+        {sets: 2, of: 4},
+        {sets: 1, of: 5},
+        {sets: 2, of: 5},
+        {sets: 1, of: 6},
+        {sets: 2, of: 6},
+      ]
 
+      WILDS     = %w(2h 2s 2d 2c 1j 2j)
 
-module Rules
-  ROUNDS = [
-    {sets: 1, of: 3},
-    {sets: 2, of: 3},
-    {sets: 1, of: 4},
-    {sets: 2, of: 4},
-    {sets: 1, of: 5},
-    {sets: 2, of: 5},
-    {sets: 1, of: 6},
-    {sets: 2, of: 6},
-  ]
+      SUITS     = {h: 'hearts', s: 'spades', d: 'diamonds', c: 'clubs', j: 'joker'}
 
-  WILDS = %w(2h 2s 2d 2c 1j 2j)
+      HEARTS    = %w(1h 2h 3h 4h 5h 6h 7h 8h 9h 10h 11h 12h 13h)
+      SPADES    = %w(1s 2s 3s 4s 5s 6s 7s 8s 9s 10s 11s 12s 13s)
+      DIAMONDS  = %w(1d 2d 3d 4d 5d 6d 7d 8d 9d 10d 11d 12d 13d)
+      CLUBS     = %w(1c 2c 3c 4c 5c 6c 7c 8c 9c 10c 11c 12c 13c)
+      JOKERS    = %w(1j 2j)
 
-  SUITS = {h: 'hearts', s: 'spades', d: 'diamonds', c: 'clubs', j: 'joker'}
+      CARDS     = %w(joker ace two three four five six seven eight nine ten jack queen king)
 
-  CARDS = %w(joker ace two three four five six seven eight nine ten jack queen king)
+      CARDS_NUM = [1..13]
 
-  CARDS_NUM = [1..13]
+      def round round
+        ROUNDS[round - 1]
+      end
 
-  def round round
-    ROUNDS[round - 1]
-  end
-
-  def rules round
-    "Start with #{ROUNDS[@round][:sets]} set(s) of #{ROUNDS[@round][:of]}"
+      def rules round
+        "Start with #{ROUNDS[@round][:sets]} set(s) of #{ROUNDS[@round][:of]}"
+      end
+    end
   end
 end

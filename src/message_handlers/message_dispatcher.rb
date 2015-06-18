@@ -4,10 +4,11 @@ require 'byebug'
 module Application
   class MessageDispatcherKlass
     attr_reader :app
-    def initialize(app, parlor)
+    def initialize app, parlor, game_master
       @handlers = {}
       @app = app
       @parlor = parlor
+      @gm = game_master
     end
 
     def register(handler)
@@ -24,8 +25,17 @@ module Application
       @handlers[handler].send handler_method, result
     end
 
+    def access_game handler, method, handler_method, *args
+      result = @gm.send(method, *args)
+      @handlers[handler].send handler_method, result
+    end
+
     def send_to_current_client message
       @app.ws.send(message)
+    end
+
+    def send_to_room message, room
+      room.players.each {|client| client.ws.send(message)}
     end
 
     def send_to_all_clients message
@@ -33,5 +43,5 @@ module Application
     end
   end
 
-  Dispatcher = MessageDispatcherKlass.new Application::APP, Application::PARLOR
+  Dispatcher = MessageDispatcherKlass.new Application::APP, Application::PARLOR, Application::GAMEMASTER
 end

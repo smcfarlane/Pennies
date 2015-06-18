@@ -1,31 +1,58 @@
-require_relative 'game_state'
+require_relative '../rules'
+require_relative '../table/deck'
+require 'uuid'
 
-class Game
-  attr_reader :play
-  def initialize game_state, play
-    @state = game_state
-    @play = play
+module Application
+  class PenniesGame
+    def initialize id, deck, players, room
+      @id = id
+      @deck = deck
+      @players = players
+      @room = room
+      @round = 1
+    end
+
+    def deal
+      @players.each {|player| player.plaery.hand = @deck.draw_cards}
+    end
+
+    def to_h
+      {
+        id: @id,
+        players: @players.map {|player| player.to_h},
+        room: @room.to_h,
+        round: @round
+      }
+    end
   end
 
-  def validate_play
-    @play.validate(@state.game[:round], @state.game[:table])
+  class GameFactory
+    def create_pennies_game deck, players, room
+      PenniesGame.new deck, players, room
+    end
   end
 
-  def play
-    @state.game[:table] = @play.play! @state.game[:table]
+  class GameMaster
+    def initialize game_factory = GameFactory.new, deck_factory = Application::Game::DeckFactory.new
+      @games = {}
+      @game_factory = game_factory
+      @deck_factory = deck_factory
+      @uuid_gen = UUID.new
+    end
+
+    def start_game room
+      if (room.players.count / 2).round <= 2
+        number_of_decks = 2
+      else
+        number_of_decks = (room.players.count / 2).round
+      end
+      deck = @deck_factory.build_deck
+      uuid = @uuid_gen.generate
+      @games[uuid] = @game_factory.create_pennies_game uuid, deck, room.players, room
+      @games[uuid].deal
+      @games[uuid].to_h
+    end
   end
 
-  def set_state
-    state = {
-      current_player: @state.game[:current_player] + 1,
-      deck: @state.game[:deck],
-      discard_pile: @state.game[:discard_pile],
-      winner: false,
-      round: @state.game[:round],
-      round_rules: Rules::rules(@state.game[:round]),
-      table: @state.game[:table]
-    }
-    gs = GameState.new @state.players, state
-    gs.set_json_state
-  end
+  Application::GAMEMASTER = GameMaster.new
 end

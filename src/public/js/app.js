@@ -72,6 +72,18 @@ ws.onmessage = function(message) {
   }
 };
 
+function roomReady(players, readyList){
+  var ready = true;
+  if (players.length < 2) {
+    ready = false;
+  } else {
+    players.forEach(function(player){
+      if (readyList.indexOf(player.id) === -1) { ready = false; }
+    });
+  }
+  return ready;
+}
+
 var createRoomHTML = function(room){
   var roomHeading = '<div class="panel-heading"><h3> ID: ' + room.status + ' Name: ' + room.name + '</h3></div><h3>&emsp;Players In Room</h3><ul class="list-group">';
   var list_items = []
@@ -84,7 +96,11 @@ var createRoomHTML = function(room){
     }
     list_items.push('<li class="list-group-item">'+ ready + player.name + readyBtn + '</li>');
   });
-  var roomFooter = '</ul><div class="panel-footer"><div class="btn-group"><button id="'+ room.id +'" class="btn btn-info" type="button">Join</button><button id="'+ room.id +'" class="btn btn-danger" type="button">Leave</button><button id="'+ room.id +'" type="button" class="btn btn-success">Start Game</button></div></div>';
+  var startGame = '';
+  if (roomReady(room.players, room.players_ready)) {
+    startGame = '<button id="'+ room.id +'" type="button" class="btn btn-success start-game">Start Game</button>';
+  }
+  var roomFooter = '</ul><div class="panel-footer"><div class="btn-group"><button id="'+ room.id +'" class="btn btn-info" type="button">Join</button><button id="'+ room.id +'" class="btn btn-danger" type="button">Leave</button>'+ startGame +'</div></div>';
   return '<div class="col-md-6"><div class="panel panel-default">' + roomHeading + list_items.join(' ') + roomFooter + '</div></div>';
 };
 
@@ -121,18 +137,23 @@ $(".delete-players").click(function(e){
   ws.send(JSON.stringify({handler: 'delete_players', player: player}));
 });
 
-// start_game
-$(".start-game").click(function(e){
-  ws.send(JSON.stringify({handler: 'start_game', player: player}));
-});
 
-// join room
+
+// join_room
 $(".rooms").click(function(e){
   if ($(e.target).attr('class') === "btn btn-info"){
     ws.send(JSON.stringify({handler: 'join_room', room_id: $(e.target).attr('id'), player: player}));
-  } else if ($(e.target).attr('class') === "btn btn-danger") {
+  }
+  // leave_room
+  else if ($(e.target).attr('class') === "btn btn-danger") {
     ws.send(JSON.stringify({handler: 'leave_room', room_id: $(e.target).attr('id'), player: player}));
-  } else if ($(e.target).hasClass('ready-btn')) {
+  }
+  // player_ready
+  else if ($(e.target).hasClass('ready-btn')) {
     ws.send(JSON.stringify({handler: 'player_ready', room_id: $(e.target).attr('id'), player: player}));
+  }
+  //start_game
+  else if ($(e.target).hasClass('start-game')) {
+    ws.send(JSON.stringify({handler: 'start_game', room_id: $(e.target).attr('id')}));
   }
 });

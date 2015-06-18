@@ -3,6 +3,8 @@ require 'sinatra'
 require 'json'
 require_relative 'app'
 require_relative 'parlor'
+require_relative './table/deck'
+require_relative './game/game'
 require 'require_all'
 require_all 'message_handlers'
 
