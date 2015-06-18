@@ -79,7 +79,7 @@ var createRoomHTML = function(id, name, players){
   players.forEach(function(player){
     list_items.push( '<li class="list-group-item">' + player.name + '</li>');
   });
-  var roomFooter = '</ul><div class="panel-footer"><div class="btn-group"><button id="'+ id +'" class="btn btn-success" type="button">Join Room</button><button id="'+ id +'" class="btn btn-danger" type="button">Leave Room</button></div></div>';
+  var roomFooter = '</ul><div class="panel-footer"><div class="btn-group"><button id="'+ id +'" class="btn btn-info" type="button">Join</button><button id="'+ id +'" class="btn btn-danger" type="button">Leave</button><button type="button" class="btn btn-success">Start Game</button></div></div>';
   return '<div class="col-md-6"><div class="panel panel-default">' + roomHeading + list_items.join(' ') + roomFooter + '</div></div>';
 };
 

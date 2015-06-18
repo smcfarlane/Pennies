@@ -1,19 +1,23 @@
 
 module Application
   class Room
-    attr_accessor :players, :name, :game, :id
+    attr_accessor :players, :name, :game, :id, :status
     def initialize id, name
       @players = {}
       @game = {}
       @name = name
       @id = id
+      @status = "waiting"
+      @players_ready = []
     end
 
     def to_h
       {
         id: @id,
         name: @name,
-        players: @players.values.map {|player| player.to_h}
+        players: @players.values.map {|player| player.to_h},
+        status: @status,
+        players_ready: []
       }
     end
   end
@@ -34,6 +38,7 @@ module Application
     def initialize
       @rooms = {}
       @players = {}
+      @player_room = {}
     end
 
     def get_all_players
@@ -68,7 +73,12 @@ module Application
 
     def add_player_to_room room_id, player_id
       if @rooms[room_id] && @players[player_id]
+        if @player_room.keys.include? player_id
+          remove_player_from_room @player_room[player_id], player_id
+          @player_room.delete player_id
+        end
         @rooms[room_id].players[player_id] = @players[player_id]
+        @player_room[player_id] = room_id
         @rooms[room_id]
       end
     end
@@ -76,13 +86,25 @@ module Application
     def remove_player_from_room room_id, player_id
       if @rooms[room_id] && @players[player_id]
         @rooms[room_id].players.delete player_id
+        @player_room.delete player_id
+        if @rooms[room_id].players == {}
+          remove_room room_id
+        end
         get_all_rooms
       end
     end
 
     def remove_room room_id
       if @rooms[room_id]
+        @rooms[room_id].players.keys.each {|id| @player_room.delete id}
         @rooms.delete room_id
+      end
+    end
+
+    def player_ready room_id, player_id
+      if @rooms[room_id] && @players[player_id]
+        @rooms[room_id].players_ready << player_id
+        @rooms[room_id].to_h
       end
     end
   end
