@@ -6,8 +6,8 @@ module Application
     class CreateRoom < MessageHandler
       def handle(message)
         @uuid_gen = UUID.new
-        @dispatcher.access_parlor :set_room, :created_room, @uuid_gen.generate, message['room_name']
-        @dispatcher.access_parlor :add_player_to_room, :added_player_to_room, @room_id,  message['player']['id']
+        @dispatcher.access_parlor 'create_room', :set_room, :created_room, @uuid_gen.generate, message['room_name']
+        @dispatcher.access_parlor 'create_room', :add_player_to_room, :added_player_to_room, @room_id,  message['player']['id']
       end
 
       def created_room room

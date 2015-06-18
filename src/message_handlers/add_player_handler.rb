@@ -5,7 +5,7 @@ module Application
   module Handlers
     class AddPlayer < MessageHandler
       def handle(message)
-        @dispatcher.access_parlor 'add_player', :set_player, :added_player, player, @current_ws
+        @dispatcher.access_parlor 'add_player', :set_player, :added_player, message['player'], @dispatcher.app.ws
       end
 
       def added_player player

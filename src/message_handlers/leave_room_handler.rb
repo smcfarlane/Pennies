@@ -4,7 +4,7 @@ module Application
   module Handlers
     class LeaveRoom < MessageHandler
       def handle(message)
-        @dispatcher.access_parlor :remove_player_from_room, :removed_player_from_room, message['room_id'],  message['player']['id']
+        @dispatcher.access_parlor 'leave_room', :remove_player_from_room, :removed_player_from_room, message['room_id'],  message['player']['id']
       end
 
       def removed_player_from_room rooms

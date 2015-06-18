@@ -23,6 +23,7 @@ module Application
       def initialize(app)
         @rack_app     = app
         @app = Application::APP
+        @parlor = Application::PARLOR
       end
 
       def call(env)
@@ -34,7 +35,7 @@ module Application
             p [:open, ws.object_id]
             @app.clients << ws
             # inital data
-            ws.send(JSON.dump({handler: 'initial_data', rooms: @app.rooms.map {|r| r.to_h}, players: @app.players}))
+            ws.send(JSON.dump({handler: 'initial_data', rooms: @parlor.get_all_rooms, players: @parlor.get_all_players}))
           end
 
           ws.on :message do |event|

@@ -53,7 +53,7 @@ ws.onmessage = function(message) {
     data.rooms.forEach(function(room){ $('.rooms').append(createRoomHTML(room.id, room.name, room.players)); });
   }
   else if (data.handler === 'create_room'){
-    $('.rooms').append(createRoomHTML(data.room.id, data.room.name, [data.player]));
+    $('.rooms').append(createRoomHTML(data.room.id, data.room.name, data.room.players));
     player.room = data.room;
   }
   else if (data.handler === 'delete-players') {
@@ -73,6 +73,7 @@ ws.onmessage = function(message) {
 };
 
 var createRoomHTML = function(id, name, players){
+  console.log(players);
   var roomHeading = '<div class="panel-heading"><h3> ID: ' + id + ' Name: ' + name + '</h3></div><h3>&emsp;Players In Room</h3><ul class="list-group">';
   var list_items = []
   players.forEach(function(player){

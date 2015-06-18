@@ -5,11 +5,11 @@ module Application
   module Handlers
     class GetPlayer < MessageHandler
       def handle(message)
-        @dispatcher.access_parlor :get_player, :got_player, message['id']
+        @dispatcher.access_parlor 'get_player', :get_player, :got_player, message['id']
       end
 
       def got_player player
-        @dispatcher.send_to_current_client JSON.dump({handler: 'get_player', player: player})
+        @dispatcher.send_to_current_client(JSON.dump({handler: 'get_player', player: player})) if player
       end
 
       def handler_name

@@ -1,7 +1,7 @@
 
 module Application
   class Room
-    attr_accessor :players, :name, :game
+    attr_accessor :players, :name, :game, :id
     def initialize id, name
       @players = {}
       @game = {}
@@ -13,7 +13,7 @@ module Application
       {
         id: @id,
         name: @name,
-        players: @players.values
+        players: @players.values.map {|player| player.to_h}
       }
     end
   end
@@ -37,33 +37,33 @@ module Application
     end
 
     def get_all_players
-      @players.map {|player| player.to_h}
+      @players.map {|key, player| player.to_h}
     end
 
     def get_all_rooms
-      @rooms.map {|room| room.to_h}
+      @rooms.map {|key, room| room.to_h}
     end
 
     def set_player player, ws
       @players[player['id']] = Player.new player, ws
-      player
+      player.to_h
     end
 
     def get_player player_id
-      @player[player_id]
+      @players[player_id].to_h if @players.keys.include? player_id
     end
 
     def remove_player player_id
-      if @player['player_id']
-        player = @player['player_id']
-        @player.delete player_id
-        [player, get_all_players]
+      if @players.keys.include? player_id
+        player = @players[player_id]
+        @players.delete player_id
+        [player.to_h, get_all_players]
       end
     end
 
     def set_room id, name
-      @room[id] = Room.new id, name
-      @room[id]
+      @rooms[id] = Room.new id, name
+      @rooms[id]
     end
 
     def add_player_to_room room_id, player_id

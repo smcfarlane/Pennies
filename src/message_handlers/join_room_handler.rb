@@ -5,11 +5,11 @@ module Application
   module Handlers
     class JoinRoom < MessageHandler
       def handle(message)
-        @dispatcher.access_parlor :add_player_to_room, :added_player_to_room, message['room_id'],  message['player']['id']
+        @dispatcher.access_parlor 'join_room', :add_player_to_room, :added_player_to_room, message['room_id'],  message['player']['id']
       end
 
       def added_player_to_room rooms
-        @dispatcher.access_parlor :get_all_rooms, :reset_rooms
+        @dispatcher.access_parlor 'join_room', :get_all_rooms, :reset_rooms
       end
 
       def reset_rooms rooms

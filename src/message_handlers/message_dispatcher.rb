@@ -1,13 +1,13 @@
 require_relative '../server'
-
+require 'byebug'
 
 module Application
   class MessageDispatcherKlass
+    attr_reader :app
     def initialize(app, parlor)
       @handlers = {}
       @app = app
       @parlor = parlor
-      @current_ws = @app.ws
     end
 
     def register(handler)
@@ -16,8 +16,7 @@ module Application
     end
 
     def handle_message(message)
-      action = @handlers[message['handler']].handle message
-      @app.send action[0], action[1]
+      @handlers[message['handler']].handle message
     end
 
     def access_parlor handler, method, handler_method, *args
@@ -26,7 +25,7 @@ module Application
     end
 
     def send_to_current_client message
-      @current_ws.send(message)
+      @app.ws.send(message)
     end
 
     def send_to_all_clients message
