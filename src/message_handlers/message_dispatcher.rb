@@ -1,5 +1,3 @@
-require_relative '../server'
-require 'byebug'
 
 module Application
   class MessageDispatcherKlass

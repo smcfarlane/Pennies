@@ -27,8 +27,8 @@ module Application
   end
 
   class GameFactory
-    def create_pennies_game deck, players, room
-      PenniesGame.new deck, players, room
+    def create_pennies_game id, deck, players, room
+      PenniesGame.new id, deck, players, room
     end
   end
 
@@ -49,6 +49,7 @@ module Application
       deck = @deck_factory.build_deck
       uuid = @uuid_gen.generate
       @games[uuid] = @game_factory.create_pennies_game uuid, deck, room.players, room
+      room.game = @games[uuid]
       @games[uuid].deal
       @games[uuid].to_h
     end
